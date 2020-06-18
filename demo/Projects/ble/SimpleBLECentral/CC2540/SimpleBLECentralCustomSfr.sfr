@@ -1,0 +1,5 @@
+[Sfr]
+sfr = "P0IFG",	"SFR",	0x89,	1,	base=16,	modified
+
+
+[SfrGroupInfo]

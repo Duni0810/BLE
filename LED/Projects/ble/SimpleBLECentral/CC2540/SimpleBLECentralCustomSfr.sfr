@@ -1,0 +1,42 @@
+[Sfr]
+sfr = "ACC",	"SFR",	0xe0,	1,	base=16,	modified
+sfr = "P0IFG",	"SFR",	0x89,	1,	base=16,	modified
+sfr = "P0IEN",	"SFR",	0xab,	1,	base=16,	modified
+sfr = "SLEEPSTA",	"SFR",	0x9d,	1,	base=16,	modified
+sfr = "T2EVTCFG",	"SFR",	0x9c,	1,	base=16,	modified
+sfr = "T3CNT",	"SFR",	0xca,	1,	base=16,	modified
+sfr = "T3CTL",	"SFR",	0xcb,	1,	base=16,	modified
+sfr = "T3CC0",	"SFR",	0xcd,	1,	base=16,	modified
+sfr = "T4CCTL0",	"SFR",	0xec,	1,	base=16,	modified
+sfr = "TIMIF",	"SFR",	0xd8,	1,	base=16,	modified
+sfr = "DMAREQ",	"SFR",	0xd7,	1,	base=16,	modified
+sfr = "P1IFG.P1IF_6",	"SFR",	0x8a,	1,	base=16,	modified
+sfr = "P2IFG",	"SFR",	0x8b,	1,	base=16,	modified
+sfr = "PICTL",	"SFR",	0x8c,	1,	base=16,	modified
+sfr = "P0IEN.P0IEN_6",	"SFR",	0xab,	1,	base=16,	modified
+sfr = "P0IEN.P0IEN_4",	"SFR",	0xab,	1,	base=16,	modified
+sfr = "P0IEN.P0IEN_3",	"SFR",	0xab,	1,	base=16,	modified
+sfr = "P1DIR.DIRP1_5",	"SFR",	0xfe,	1,	base=16,	modified
+sfr = "P1DIR.DIRP1_0",	"SFR",	0xfe,	1,	base=16,	modified
+sfr = "PMUX.DREGSTA",	"SFR",	0xae,	1,	base=16,	modified
+sfr = "CLKCONCMD.OSC",	"SFR",	0xc6,	1,	base=16,	modified
+sfr = "CLKCONSTA.OSC32K",	"SFR",	0x9e,	1,	base=16,	modified
+sfr = "T1CNTL",	"SFR",	0xe2,	1,	base=16,	modified
+sfr = "T1STAT.CH2IF",	"SFR",	0xaf,	1,	base=16,	modified
+sfr = "T1CCTL0.IM",	"SFR",	0xe5,	1,	base=16,	modified
+sfr = "T1CCTL0.CMP",	"SFR",	0xe5,	1,	base=16,	modified
+sfr = "T1CCTL0.CAP",	"SFR",	0xe5,	1,	base=16,	modified
+sfr = "T1CC0H",	"SFR",	0xdb,	1,	base=16,	modified
+sfr = "T1CC0L",	"SFR",	0xda,	1,	base=16,	modified
+sfr = "T1CCTL1",	"SFR",	0xe6,	1,	base=16,	modified
+sfr = "TIMIF.T3CH1IF",	"SFR",	0xd8,	1,	base=16,	modified
+sfr = "U0CSR.ERR",	"SFR",	0x86,	1,	base=16,	modified
+sfr = "USBIIF.INEP4IF",	"XData",	0x6202,	1,	base=16,	modified
+sfr = "T1CC0H",	"SFR",	0xdb,	1,	base=16,	modified
+sfr = "T1CCTL1",	"SFR",	0xe6,	1,	base=16,	modified
+sfr = "P0IEN.P0IEN_6",	"SFR",	0xab,	1,	base=16,	modified
+
+
+[SfrGroupInfo]
+group = "Custom", "ACC", "P0IFG", "P0IEN", "SLEEPSTA"
+group = "Custom", "T2EVTCFG", "T3CNT", "T3CTL", "T3CC0", "T4CCTL0", "TIMIF"

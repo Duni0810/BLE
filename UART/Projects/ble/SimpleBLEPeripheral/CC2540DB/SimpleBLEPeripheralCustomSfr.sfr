@@ -1,0 +1,35 @@
+[Sfr]
+sfr = "IRCON",	"SFR",	0xc0,	1,	base=16,	modified
+sfr = "DMA1CFGL",	"SFR",	0xd2,	1,	base=16,	modified
+sfr = "T1CC0L",	"SFR",	0xda,	1,	base=16,	modified
+sfr = "T1CCTL1",	"SFR",	0xe6,	1,	base=16,	modified
+sfr = "T2MOVF2",	"SFR",	0xa6,	1,	base=16,	modified
+sfr = "USBFRML.FRAME[7:0]",	"XData",	0x620c,	1,	base=16,	modified
+sfr = "IEN2.RFIE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "TCON",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.URX1IF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.RFERRIF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "S0CON",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S0CON.ENCIF_1",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S0CON.ENCIF_0",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "IRCON.T2IF",	"SFR",	0xc0,	1,	base=16,	modified
+sfr = "T2IRQF.TIMER2_COMPARE1F",	"SFR",	0xa1,	1,	base=16,	modified
+sfr = "T2IRQF.TIMER2_PERF",	"SFR",	0xa1,	1,	base=16,	modified
+sfr = "T2IRQM.TIMER2_OVF_COMPARE1M",	"SFR",	0xa7,	1,	base=16,	modified
+sfr = "T2IRQM.TIMER2_OVF_PERM",	"SFR",	0xa7,	1,	base=16,	modified
+sfr = "T2IRQM.TIMER2_COMPARE2M",	"SFR",	0xa7,	1,	base=16,	modified
+sfr = "T2IRQM.TIMER2_COMPARE1M",	"SFR",	0xa7,	1,	base=16,	modified
+sfr = "T2IRQM.TIMER2_PERM",	"SFR",	0xa7,	1,	base=16,	modified
+sfr = "T2CTRL.TIMER2_STATE",	"SFR",	0x94,	1,	base=16,	modified
+sfr = "T2EVTCFG.TIMER2_EVENT2_CFG",	"SFR",	0x9c,	1,	base=16,	modified
+sfr = "T2EVTCFG.TIMER2_EVENT1_CFG",	"SFR",	0x9c,	1,	base=16,	modified
+sfr = "T3CNT",	"SFR",	0xca,	1,	base=16,	modified
+sfr = "T3CTL",	"SFR",	0xcb,	1,	base=16,	modified
+sfr = "T3CTL.DIV",	"SFR",	0xcb,	1,	base=16,	modified
+sfr = "T3CTL.START",	"SFR",	0xcb,	1,	base=16,	modified
+
+
+[SfrGroupInfo]
+group = "Custom", "IRCON", "DMA1CFGL"
+group = "Custom", "T1CC0L", "T1CCTL1", "T2MOVF2"
+group = "Custom", "USBFRML.FRAME[7:0]"

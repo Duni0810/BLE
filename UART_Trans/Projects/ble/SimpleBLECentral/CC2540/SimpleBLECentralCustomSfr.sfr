@@ -1,0 +1,17 @@
+[Sfr]
+sfr = "P0IFG",	"SFR",	0x89,	1,	base=16,	modified
+sfr = "T1CCTL1",	"SFR",	0xe6,	1,	base=16,	modified
+sfr = "T2EVTCFG",	"SFR",	0x9c,	1,	base=16,	modified
+sfr = "T3CNT",	"SFR",	0xca,	1,	base=16,	modified
+sfr = "T3CTL",	"SFR",	0xcb,	1,	base=16,	modified
+sfr = "T3CC0",	"SFR",	0xcd,	1,	base=16,	modified
+sfr = "T4CCTL0",	"SFR",	0xec,	1,	base=16,	modified
+sfr = "USBFRML",	"XData",	0x620c,	1,	base=16,	modified
+sfr = "USBFRML.FRAME[7:0]",	"XData",	0x620c,	1,	base=16,	modified
+sfr = "T1CCTL2.IM",	"SFR",	0xe7,	1,	base=16,	modified
+
+
+[SfrGroupInfo]
+group = "Custom", "P0IFG", "T1CCTL1", "T2EVTCFG", "T3CNT", "T3CTL", "T3CC0"
+group = "Custom", "T4CCTL0", "USBFRML"
+group = "Custom", "USBFRML.FRAME[7:0]"

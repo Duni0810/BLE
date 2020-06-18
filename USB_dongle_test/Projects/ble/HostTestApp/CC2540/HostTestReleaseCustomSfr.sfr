@@ -1,0 +1,10 @@
+[Sfr]
+sfr = "OBSSEL2.EN",	"XData",	0x6245,	1,	base=16,	modified
+sfr = "OBSSEL5",	"XData",	0x6248,	1,	base=16,	modified
+sfr = "FMAP.MAP",	"SFR",	0x9f,	1,	base=16,	modified
+sfr = "OPAMPC",	"XData",	0x62c0,	1,	base=16,	modified
+sfr = "CHIPINFO0.FLASHSIZE",	"XData",	0x6276,	1,	base=16,	modified
+sfr = "USBOIE.OUTEP5IE",	"XData",	0x6209,	1,	base=16,	modified
+
+
+[SfrGroupInfo]
