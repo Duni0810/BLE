@@ -75,7 +75,7 @@
 #define DEFAULT_MAX_SCAN_RES                  8 // 最大扫描从机个数，最大为8， 2540 为3 
 
 // Scan duration in ms
-#define DEFAULT_SCAN_DURATION                 4000 // 开始扫描到返回扫描结果的时间间隔， 不能太小的原因是与从机的广播间隔有关
+#define DEFAULT_SCAN_DURATION                 3000 // 开始扫描到返回扫描结果的时间间隔， 不能太小的原因是与从机的广播间隔有关
 
 // Discovey mode (limited, general, all)
 #define DEFAULT_DISCOVERY_MODE                DEVDISC_MODE_ALL // 扫描所有从机， 当然你可以指定扫描
@@ -109,7 +109,7 @@
 #define DEFAULT_UPDATE_SLAVE_LATENCY          0
 
 // Supervision timeout value (units of 10ms) if automatic parameter update request is enabled
-#define DEFAULT_UPDATE_CONN_TIMEOUT           300 // 这个是参数更新的定时时间， 不能太长， 否则影响数据发送----请多做实验再修改该值
+#define DEFAULT_UPDATE_CONN_TIMEOUT           100 // 这个是参数更新的定时时间， 不能太长， 否则影响数据发送----请多做实验再修改该值
 
 // Default passcode
 #define DEFAULT_PASSCODE                      19655
@@ -127,7 +127,7 @@
 #define DEFAULT_IO_CAPABILITIES               GAPBOND_IO_CAP_DISPLAY_ONLY
 
 // Default service discovery timer delay in ms
-#define DEFAULT_SVC_DISCOVERY_DELAY           1000 // 这个的意思是连接上从机后延时多长时间去获取从机的服务， 为了加快速度，这里我们设置为 1ms
+#define DEFAULT_SVC_DISCOVERY_DELAY           500 // 这个的意思是连接上从机后延时多长时间去获取从机的服务， 为了加快速度，这里我们设置为 500ms
 
 
 // TRUE to filter discovery results on desired service UUID
@@ -268,7 +268,81 @@ static uint8 devMacList[MAX_DEVICE_NUM][B_ADDR_LEN] = {
 
 
 
-extern int osal_continuous_scan_flag;  //  在主函数定义的flag
+
+static uint16 count;             //用于定时器计数
+
+static int osal_continuous_scan_flag = 0;
+
+#define LED2 P1_1       // P1.1口控制LED1
+
+
+
+
+static uint8 __g_beat_flag = 0;
+
+
+
+
+//定时器T3中断处理函数
+#pragma vector = T3_VECTOR 
+__interrupt void T3_ISR(void) 
+{ 
+    IRCON = 0x00;               //清中断标志, 也可由硬件自动完成 
+    
+    
+    if(count++ > 8000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
+    {                           //经过示波器测量确保精确
+        count = 0;              //计数清零 
+        
+        if (osal_continuous_scan_flag == 1) {
+            //LED2 = ~LED2;       //改变LED1的状态 
+            
+            attWriteReq_t AttReq;       
+            uint8 ValueBuf[1];
+            
+            
+            
+            
+            
+             //如果心跳状态为0 则断开连接
+            if ((__g_beat_flag == 1) && (GAP_CONNHANDLE_INIT != simpleBLEConnHandle)) {
+                GAPCentralRole_TerminateLink(simpleBLEConnHandle);
+                simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
+            }
+            
+            
+            
+            
+            
+            
+            AttReq.handle = 0x0025; // 0x0039; 
+            AttReq.len = 1;
+            AttReq.sig = 0;
+            AttReq.cmd = 0;
+            ValueBuf[0] = 0x08;
+            //ValueBuf[1] = 0x00;
+            osal_memcpy(AttReq.value,ValueBuf,1);
+            GATT_WriteCharValue( 0, &AttReq, simpleBLETaskId );
+            
+            
+            // 定时器执行扫描函数
+            GAPCentralRole_StartDiscovery( DEFAULT_DISCOVERY_MODE, // DEFAULT_DISCOVERY_MODE,
+                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
+                                          DEFAULT_DISCOVERY_WHITE_LIST );  
+            
+            
+            __g_beat_flag = 1;  //  设置心跳状态为0 
+            
+        }   
+    } 
+}
+
+
+
+
+
+
+//extern int osal_continuous_scan_flag;  //  在主函数定义的flag
 
 //数组比较函数，两个数组完全相等返回TRUE,否则返回FALSE
 static bool isArrayEqual(uint8 arr1[],uint8 arr2[],uint8 arr1_length,uint8 arr2_length)
@@ -384,8 +458,6 @@ void SimpleBLECentral_Init( uint8 task_id )
   // Setup a delayed profile startup
   osal_set_event( simpleBLETaskId, START_DEVICE_EVT );
   
-  //NPI_PrintValue("data: ", simpleBLETaskId, 10);
-  //NPI_PrintString("\n");
 }
 
 /*********************************************************************
@@ -458,23 +530,26 @@ uint16 SimpleBLECentral_ProcessEvent( uint8 task_id, uint16 events )
   
   
   
-  if ( events & START_READ_CHAR1_EVT )
+  if ( events & ENABLE_CHAR4_NOTICE_EVT )
   {
-      // Do a read
-      attReadReq_t req;
-      uint8 status;
-      req.handle = simpleBLECharHdl;
       
-      NPI_PrintString("read \n");
+      NPI_PrintString("ENABLE_CHAR4_NOTICE_EVT \n");
+      
+      attWriteReq_t AttReq;       
+      uint8 ValueBuf[2];         
+      
+      AttReq.handle = 0x002F;
+      AttReq.len = 2;
+      AttReq.sig = 0;
+      AttReq.cmd = 0;
+      ValueBuf[0] = 0x01;
+      ValueBuf[1] = 0x00;
+      osal_memcpy(AttReq.value,ValueBuf,2);
+      GATT_WriteCharValue( 0, &AttReq, simpleBLETaskId );
       
       
-      status = GATT_ReadCharValue( 0x0028, &req, simpleBLETaskId );
-      if ( status == SUCCESS )
-      {
-          simpleBLEProcedureInProgress = TRUE;
-      }
-      
-      return ( events ^ START_READ_CHAR1_EVT );
+      __g_beat_flag = 2;
+      return ( events ^ ENABLE_CHAR4_NOTICE_EVT );
   }
   
   
@@ -527,15 +602,15 @@ static void simpleBLECentral_HandleKeys( uint8 shift, uint8 keys )
   {
     //使能CHAR7通知
     attWriteReq_t AttReq;       
-    uint8 ValueBuf[2];
+    uint8 ValueBuf[1];
        
-    AttReq.handle = 0x0039;
-    AttReq.len = 2;
+    AttReq.handle = 0x0025; // 0x0039;
+    AttReq.len = 1;
     AttReq.sig = 0;
     AttReq.cmd = 0;
-    ValueBuf[0] = 0x01;
-    ValueBuf[1] = 0x00;
-    osal_memcpy(AttReq.value,ValueBuf,2);
+    ValueBuf[0] = 0x04;
+    //ValueBuf[1] = 0x00;
+    osal_memcpy(AttReq.value,ValueBuf,1);
     GATT_WriteCharValue( 0, &AttReq, simpleBLETaskId );
     NPI_WriteTransport("Enable Notice\n", 14 ); 
   }
@@ -570,83 +645,97 @@ static void simpleBLECentral_HandleKeys( uint8 shift, uint8 keys )
  */
 static void simpleBLECentralProcessGATTMsg( gattMsgEvent_t *pMsg )
 {
-  if ( simpleBLEState != BLE_STATE_CONNECTED )
-  {
-    // In case a GATT message came after a connection has dropped,
-    // ignore the message
-    return;
-  }
-  
-  if ( ( pMsg->method == ATT_READ_RSP ) ||
-       ( ( pMsg->method == ATT_ERROR_RSP ) &&
+    if ( simpleBLEState != BLE_STATE_CONNECTED )
+    {
+        // In case a GATT message came after a connection has dropped,
+        // ignore the message
+        return;
+    }
+    
+    if ( ( pMsg->method == ATT_READ_RSP ) ||
+        ( ( pMsg->method == ATT_ERROR_RSP ) &&
          ( pMsg->msg.errorRsp.reqOpcode == ATT_READ_REQ ) ) )
-  {
-    if ( pMsg->method == ATT_ERROR_RSP )
     {
-      uint8 status = pMsg->msg.errorRsp.errCode;
-      
-      LCD_WRITE_STRING_VALUE( "Read Error", status, 10, HAL_LCD_LINE_1 );
-    }
-    else
-    {
-      // After a successful read, display the read value
-      uint8 valueRead = pMsg->msg.readRsp.value[0];
-
-      LCD_WRITE_STRING_VALUE( "Read rsp:", valueRead, 10, HAL_LCD_LINE_1 );
-    }
-    
-    
-    
-    
-    simpleBLEProcedureInProgress = FALSE;
-  }
-  else if ( ( pMsg->method == ATT_WRITE_RSP ) ||
-       ( ( pMsg->method == ATT_ERROR_RSP ) &&
-         ( pMsg->msg.errorRsp.reqOpcode == ATT_WRITE_REQ ) ) )
-  {
-    
-    if ( pMsg->method == ATT_ERROR_RSP == ATT_ERROR_RSP )
-    {
-      uint8 status = pMsg->msg.errorRsp.errCode;
-      
-      LCD_WRITE_STRING_VALUE( "Write Error", status, 10, HAL_LCD_LINE_1 );
-    }
-    else
-    {
-      // After a succesful write, display the value that was written and increment value
-      //LCD_WRITE_STRING_VALUE( "Write sent:", simpleBLECharVal++, 10, HAL_LCD_LINE_1 );      
-      simpleBLEChar6DoWrite = TRUE;
-    }
-    
-    simpleBLEProcedureInProgress = FALSE;    
-
-  }
-  else if ( simpleBLEDiscState != BLE_DISC_STATE_IDLE )
-  {
-    simpleBLEGATTDiscoveryEvent( pMsg );
-  }
-  else if ( ( pMsg->method == ATT_HANDLE_VALUE_NOTI ) )   //通知
-  {
-      
-      // 从机给主机发送给通知的数据接口
-    if( pMsg->msg.handleValueNoti.handle == 0x0038)   //CHAR7的通知  串口打印
-    {
-      if(pMsg->msg.handleValueNoti.value[0]>=15)
-      {
-        NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],14 ); 
-        NPI_WriteTransport("...\n",4 ); 
-      }
-      else
-      {
-        NPI_PrintString("\r\n");
-        NPI_PrintValue("value[0] = ", pMsg->msg.handleValueNoti.value[0], 10);
-        NPI_PrintString("\r\n");
+        if ( pMsg->method == ATT_ERROR_RSP )
+        {
+            uint8 status = pMsg->msg.errorRsp.errCode;
+            
+            LCD_WRITE_STRING_VALUE( "Read Error", status, 10, HAL_LCD_LINE_1 );
+        }
+        else
+        {
+            // After a successful read, display the read value
+            uint8 valueRead = pMsg->msg.readRsp.value[0];
+            
+            LCD_WRITE_STRING_VALUE( "Read rsp:", valueRead, 10, HAL_LCD_LINE_1 );
+        }
         
-        NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],pMsg->msg.handleValueNoti.value[0] ); 
-      }
+        
+        
+        
+        simpleBLEProcedureInProgress = FALSE;
     }
-  }
-  
+    else if ( ( pMsg->method == ATT_WRITE_RSP ) ||
+             ( ( pMsg->method == ATT_ERROR_RSP ) &&
+              ( pMsg->msg.errorRsp.reqOpcode == ATT_WRITE_REQ ) ) )
+    {
+        
+        if ( pMsg->method == ATT_ERROR_RSP == ATT_ERROR_RSP )
+        {
+            uint8 status = pMsg->msg.errorRsp.errCode;
+            
+            LCD_WRITE_STRING_VALUE( "Write Error", status, 10, HAL_LCD_LINE_1 );
+        }
+        else
+        {
+            // After a succesful write, display the value that was written and increment value
+            //LCD_WRITE_STRING_VALUE( "Write sent:", simpleBLECharVal++, 10, HAL_LCD_LINE_1 );      
+            simpleBLEChar6DoWrite = TRUE;
+        }
+        
+        simpleBLEProcedureInProgress = FALSE;    
+        
+    }
+    else if ( simpleBLEDiscState != BLE_DISC_STATE_IDLE )
+    {
+        simpleBLEGATTDiscoveryEvent( pMsg );
+    }
+    else if ( ( pMsg->method == ATT_HANDLE_VALUE_NOTI ) )   //通知
+    {
+        
+        //NPI_PrintString("ATT_HANDLE_VALUE_NOTI \n");
+        
+        // 从机给主机发送给通知的数据接口  
+        if( pMsg->msg.handleValueNoti.handle == 0x0038)   //CHAR7的通知  串口打印
+        {
+            if(pMsg->msg.handleValueNoti.value[0]>=15)
+            {
+                NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],14 ); 
+                NPI_WriteTransport("...\n",4 ); 
+            }
+            else
+            {
+//                NPI_PrintString("\r\n");
+//                NPI_PrintValue("value[0] = ", pMsg->msg.handleValueNoti.value[0], 10);
+//                NPI_PrintString("\r\n");
+                
+                NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],pMsg->msg.handleValueNoti.value[0] ); 
+            }
+        }
+        
+        
+                // 从机给主机发送给通知的数据接口  
+        if( pMsg->msg.handleValueNoti.handle == 0x002E)   //CHAR4的通知  串口打印
+        {
+        
+            //NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],14 );
+            NPI_PrintValue("char4: ", pMsg->msg.handleValueNoti.value[0], 10); 
+            
+            __g_beat_flag = 2;
+        }
+        
+    }
+    
 }
 
 /*********************************************************************
@@ -705,6 +794,11 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
             // discovery complete
             simpleBLEScanning = FALSE;
             
+            
+            
+            //osal_memset(simpleBLEDevList, 0, DEFAULT_MAX_SCAN_RES);
+                
+                
             // if not filtering device discovery results based on service UUID
             if ( DEFAULT_DEV_DISC_BY_SVC_UUID == FALSE )
             {
@@ -716,6 +810,8 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
             
             LCD_WRITE_STRING_VALUE( "Devices Found", simpleBLEScanRes,
                                    10, HAL_LCD_LINE_1 );
+            
+            
             
             
             
@@ -785,71 +881,89 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
       break;
 
     case GAP_LINK_ESTABLISHED_EVENT: //设备连接
-      {
-        if ( pEvent->gap.hdr.status == SUCCESS )
-        {          
-          simpleBLEState = BLE_STATE_CONNECTED;
-          
-          //将handle存起来，供主机发送数据的时候使用
-          simpleBLEConnHandle = pEvent->linkCmpl.connectionHandle;
-          simpleBLEProcedureInProgress = TRUE;    
-
-          // If service discovery not performed initiate service discovery
-          if ( simpleBLECharHdl == 0 )
-          {
-            osal_start_timerEx( simpleBLETaskId, START_DISCOVERY_EVT, DEFAULT_SVC_DISCOVERY_DELAY );
-          }
-                    
-          LCD_WRITE_STRING( "Connected", HAL_LCD_LINE_1 );
-          LCD_WRITE_STRING( bdAddr2Str( pEvent->linkCmpl.devAddr ), HAL_LCD_LINE_2 );  
-          HalLedSet(HAL_LED_1, HAL_LED_MODE_ON );   //开LED3
-        }
-        else
         {
-          simpleBLEState = BLE_STATE_IDLE;
-          simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
-          simpleBLERssi = FALSE;
-          simpleBLEDiscState = BLE_DISC_STATE_IDLE;
-          
-          LCD_WRITE_STRING( "Connect Failed", HAL_LCD_LINE_1 );
-          LCD_WRITE_STRING_VALUE( "Reason:", pEvent->gap.hdr.status, 10, HAL_LCD_LINE_2 );
-          HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF );   //关LED3
+            if ( pEvent->gap.hdr.status == SUCCESS )
+            {          
+                simpleBLEState = BLE_STATE_CONNECTED;
+                
+                //将handle存起来，供主机发送数据的时候使用
+                simpleBLEConnHandle = pEvent->linkCmpl.connectionHandle;
+                simpleBLEProcedureInProgress = TRUE;    
+                
+                
+                
+                NPI_PrintValue("handle : ", simpleBLEConnHandle, 10);
+                
+                
+                
+                // If service discovery not performed initiate service discovery
+                if ( simpleBLECharHdl == 0 )
+                {
+                    osal_start_timerEx( simpleBLETaskId, START_DISCOVERY_EVT, DEFAULT_SVC_DISCOVERY_DELAY );
+                }
+                
+                LCD_WRITE_STRING( "Connected", HAL_LCD_LINE_1 );
+                LCD_WRITE_STRING( bdAddr2Str( pEvent->linkCmpl.devAddr ), HAL_LCD_LINE_2 );  
+                HalLedSet(HAL_LED_1, HAL_LED_MODE_ON );   //开LED3
+            }
+            else
+            {
+                simpleBLEState = BLE_STATE_IDLE;
+                simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
+                simpleBLERssi = FALSE;
+                simpleBLEDiscState = BLE_DISC_STATE_IDLE;
+                
+                LCD_WRITE_STRING( "Connect Failed", HAL_LCD_LINE_1 );
+                LCD_WRITE_STRING_VALUE( "Reason:", pEvent->gap.hdr.status, 10, HAL_LCD_LINE_2 );
+                HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF );   //关LED3
+            }
         }
-      }
       break;
 
     case GAP_LINK_TERMINATED_EVENT: //断开连接
-      {
-        simpleBLEState = BLE_STATE_IDLE;
-        simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
-        simpleBLERssi = FALSE;
-        simpleBLEDiscState = BLE_DISC_STATE_IDLE;
-        simpleBLECharHdl = 0;
-        simpleBLEProcedureInProgress = FALSE;
-          
-        LCD_WRITE_STRING( "Disconnected", HAL_LCD_LINE_1 );
-        LCD_WRITE_STRING_VALUE( "Reason:", pEvent->linkTerminate.reason,
-                                10, HAL_LCD_LINE_2 );
-        HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF );   //关LED3
-      }
+        {
+            simpleBLEState = BLE_STATE_IDLE;
+            simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
+            simpleBLERssi = FALSE;
+            simpleBLEDiscState = BLE_DISC_STATE_IDLE;
+            simpleBLECharHdl = 0;
+            simpleBLEProcedureInProgress = FALSE;
+            
+            LCD_WRITE_STRING( "Disconnected", HAL_LCD_LINE_1 );
+            LCD_WRITE_STRING_VALUE( "Reason:", pEvent->linkTerminate.reason,
+                                   10, HAL_LCD_LINE_2 );
+            HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF );   //关LED3
+            
+            
+            NPI_PrintValue("handle : ", pEvent->linkTerminate.connectionHandle, 10);
+            //NPI_WriteTransport("YYY YY\n", 7);
+        }
       break;
 
     case GAP_LINK_PARAM_UPDATE_EVENT: //参数更新
-      {
-        attWriteReq_t AttReq;       
-        uint8 ValueBuf[2];
-        LCD_WRITE_STRING( "Param Update", HAL_LCD_LINE_1);           
-             
-        AttReq.handle = 0x0039;
-        AttReq.len = 2;
-        AttReq.sig = 0;
-        AttReq.cmd = 0;
-        ValueBuf[0] = 0x01;
-        ValueBuf[1] = 0x00;
-        osal_memcpy(AttReq.value,ValueBuf,2);
-        GATT_WriteCharValue( 0, &AttReq, simpleBLETaskId );
-        NPI_WriteTransport("Enable Notice\n", 14 ); 
-      }
+        {
+            
+            // 这段是使能 char4 与 char7 的通知
+            attWriteReq_t AttReq;       
+            uint8 ValueBuf[2];
+            LCD_WRITE_STRING( "Param Update", HAL_LCD_LINE_1);           
+            
+            AttReq.handle = 0x0039;
+            AttReq.len = 2;
+            AttReq.sig = 0;
+            AttReq.cmd = 0;
+            ValueBuf[0] = 0x01;
+            ValueBuf[1] = 0x00;
+            osal_memcpy(AttReq.value,ValueBuf,2);
+            GATT_WriteCharValue( 0, &AttReq, simpleBLETaskId );
+            
+            osal_start_timerEx( simpleBLETaskId, ENABLE_CHAR4_NOTICE_EVT, 1000 );
+            
+            __g_beat_flag = 2;
+            
+            
+            NPI_WriteTransport("Enable Notice\n", 14 ); 
+        }
       break;
       
     default:

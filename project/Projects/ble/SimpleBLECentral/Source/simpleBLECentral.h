@@ -58,7 +58,7 @@ extern "C"
 #define START_DEVICE_EVT                              0x0001
 #define START_DISCOVERY_EVT                           0x0002
      
-#define START_READ_CHAR1_EVT                          0x0004  // young
+#define ENABLE_CHAR4_NOTICE_EVT                       0x0004  // young
 
 /*********************************************************************
  * MACROS

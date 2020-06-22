@@ -86,7 +86,7 @@ contact Texas Instruments Incorporated at www.TI.com.
 */
 
 // How often to perform periodic event
-#define SBP_PERIODIC_EVT_PERIOD                   5000
+#define SBP_PERIODIC_EVT_PERIOD                   2000
 
 // What is the advertising interval when device is discoverable (units of 625us, 160=100ms)
 #define DEFAULT_ADVERTISING_INTERVAL          160
@@ -110,8 +110,8 @@ contact Texas Instruments Incorporated at www.TI.com.
 #define DEFAULT_DESIRED_SLAVE_LATENCY         0
 
 // Supervision timeout value (units of 10ms, 1000=10s) if automatic parameter update request is enabled
-#define DEFAULT_DESIRED_CONN_TIMEOUT          500
-
+#define DEFAULT_DESIRED_CONN_TIMEOUT          300  // 3s
+ 
 // Whether to enable automatic parameter update request when a connection is formed
 #define DEFAULT_ENABLE_UPDATE_REQUEST         TRUE
 
@@ -576,7 +576,7 @@ static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys )
             uint8 s_buf[] = " young2zq";
             tmpLen = (uint8)osal_strlen( (char*)s_buf );
             s_buf[0] = tmpLen;
-        
+            
             NPI_PrintString("KEY1 k1\n");
             SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR7, SIMPLEPROFILE_CHAR7_LEN, s_buf );
         }
@@ -587,6 +587,7 @@ static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys )
         {
             uint8 current_adv_enabled_status;
             uint8 new_adv_enabled_status;
+            
             
             //读取当前广播使能状态
             GAPRole_GetParameter( GAPROLE_ADVERT_ENABLED,
@@ -603,7 +604,14 @@ static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys )
             
             //设置广播状态
             GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &new_adv_enabled_status );
-    
+            
+        } else {
+            
+            uint8 data = 14;
+            
+            
+            NPI_PrintString("KEY2 k2\n");
+            SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), &data );
         }
     }
 }

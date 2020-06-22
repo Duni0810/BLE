@@ -67,9 +67,13 @@ typedef unsigned char uchar;
 
 #define LED2 P1_1       // P1.1口控制LED1
 
-static uint count;             //用于定时器计数
+//static uint count;             //用于定时器计数
+//
+//int osal_continuous_scan_flag = 0;
 
-int osal_continuous_scan_flag = 0;
+
+//extern uint8 GAPCentralRole_StartDiscovery( uint8 mode, uint8 activeScan, uint8 whiteList );
+
 
 
 /****************************************************************************
@@ -98,29 +102,6 @@ void InitT3()
     T3CTL &= ~0x03;          //自动重装 00－>0xff  62500/255=245(次)
     T3CTL |= 0x10;           //启动
     EA = 1;                  //开总中断
-}
-
-//定时器T3中断处理函数
-#pragma vector = T3_VECTOR 
-__interrupt void T3_ISR(void) 
-{ 
-    IRCON = 0x00;               //清中断标志, 也可由硬件自动完成 
-    
-    
-    if(count++ > 6000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
-    {                           //经过示波器测量确保精确
-        count = 0;              //计数清零 
-        
-        if (osal_continuous_scan_flag == 1) {
-            LED2 = ~LED2;       //改变LED1的状态 
-            //#define START_DEVICE_EVT      0x0001
-           // osal_set_event( 11, 0x0001 ); 
-            
-            osal_start_timerEx(11, 0x0004, 2000);
-        }
-        
-
-    } 
 }
 
 

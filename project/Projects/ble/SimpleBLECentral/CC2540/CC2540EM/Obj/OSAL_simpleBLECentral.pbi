@@ -2588,7 +2588,7 @@
 <L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:41:9: macro definition=SIMPLEBLECENTRAL_H <US>c:macro@SIMPLEBLECENTRAL_H<UE> <DS>SIMPLEBLECENTRAL_H<DE> Extent=<ES>41:9 - 41:27<EE>
 <L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:58:9: macro definition=START_DEVICE_EVT <US>c:macro@START_DEVICE_EVT<UE> <DS>START_DEVICE_EVT<DE> Extent=<ES>58:9 - 58:61<EE>
 <L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:59:9: macro definition=START_DISCOVERY_EVT <US>c:macro@START_DISCOVERY_EVT<UE> <DS>START_DISCOVERY_EVT<DE> Extent=<ES>59:9 - 59:61<EE>
-<L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:61:9: macro definition=START_READ_CHAR1_EVT <US>c:macro@START_READ_CHAR1_EVT<UE> <DS>START_READ_CHAR1_EVT<DE> Extent=<ES>61:9 - 61:61<EE>
+<L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:61:9: macro definition=ENABLE_CHAR4_NOTICE_EVT <US>c:macro@ENABLE_CHAR4_NOTICE_EVT<UE> <DS>ENABLE_CHAR4_NOTICE_EVT<DE> Extent=<ES>61:9 - 61:61<EE>
 <L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:68:5: macro expansion=HAL_LCD|<invalid loc>:449:9 <US>c:macro@HAL_LCD<UE> <DS>HAL_LCD<DE> Extent=<ES>68:5 - 68:12<EE>
 <L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:68:16: macro expansion=TRUE|K:\BLE_young_code\project\Components\hal\target\CC2540EB\hal_types.h:112:9 <US>c:macro@TRUE<UE> <DS>TRUE<DE> Extent=<ES>68:16 - 68:20<EE>
 <L>K:\BLE_young_code\project\Projects\ble\SimpleBLECentral\Source\simpleBLECentral.h:69:9: macro definition=LCD_WRITE_STRING <US>c:macro@LCD_WRITE_STRING<UE> <DS>LCD_WRITE_STRING<DE> Extent=<ES>69:9 - 69:96<EE>
