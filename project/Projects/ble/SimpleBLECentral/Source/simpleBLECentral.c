@@ -147,7 +147,7 @@ enum
 {
   BLE_DISC_STATE_IDLE,                // Idle
   BLE_DISC_STATE_SVC,                 // Service discovery
-  BLE_DISC_STATE_CHAR,               // Characteristic discovery
+  BLE_DISC_STATE_CHAR1,               // Characteristic discovery
   BLE_DISC_STATE_CHAR2,     
   BLE_DISC_STATE_CHAR3,     
   BLE_DISC_STATE_CHAR4,     
@@ -544,7 +544,7 @@ uint16 SimpleBLECentral_ProcessEvent( uint8 task_id, uint16 events )
   if ( events & ENABLE_CHAR4_NOTICE_EVT )
   {
       
-      NPI_PrintString("ENABLE_CHAR4_NOTICE_EVT \n");
+      //NPI_PrintString("ENABLE_CHAR4_NOTICE_EVT \n");
       
       attWriteReq_t AttReq;       
       uint8 ValueBuf[2];         
@@ -835,7 +835,7 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
             //打印所有设备Mac
             
             NPI_PrintString("device list:\n");    
-            for(k=0;k<simpleBLEScanRes;k++) {
+            for(k = 0; k < simpleBLEScanRes; k++) {
                 NPI_PrintString((uint8*)bdAddr2Str( simpleBLEDevList[k].addr ));
                 NPI_PrintString("  \n");
             } 
@@ -851,11 +851,11 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
                 
                 // 判断是否是我们需要的mac
                 HalLedSet(HAL_LED_1, HAL_LED_MODE_ON );   //开LED1
-                if ( simpleBLEState == BLE_STATE_IDLE )
-                {           
+                //if ( simpleBLEState == BLE_STATE_IDLE )
+                //{           
                     uint8 addrType;
                     uint8 *peerAddr;
-                    int devMacRes[MAX_DEVICE_NUM] = {-1, -1, -1};
+                    int devMacRes[MAX_DEVICE_NUM] = {-1, -1, -1}; // 下标保存
                     int devMacNum = 0;
                     //simpleBLEScanIdx = 0;
                     
@@ -885,7 +885,7 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
                     GAPCentralRole_EstablishLink( DEFAULT_LINK_HIGH_DUTY_CYCLE,
                                                  DEFAULT_LINK_WHITE_LIST,
                                                  addrType, peerAddr );
-                }
+                //}
                 
                 HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF ); 
             }
@@ -1131,6 +1131,12 @@ static void simpleBLEGATTDiscoveryEvent( gattMsgEvent_t *pMsg )
                                              pMsg->msg.readByTypeRsp.dataList[1] );
             
             LCD_WRITE_STRING( "Simple Svc Found", HAL_LCD_LINE_1 );
+            
+            
+            //NPI_PrintValue(" handle 6 = 0x", simpleBLECharHd6, 16);
+            
+            
+            
             simpleBLEProcedureInProgress = FALSE;
         }
         

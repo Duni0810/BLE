@@ -53,8 +53,6 @@ sfr = "U1BAUD.BAUD_M",	"SFR",	0xfa,	1,	base=16,	modified
 sfr = "CHIPINFO1",	"XData",	0x6277,	1,	base=16,	modified
 sfr = "USBFRML.FRAME[7:0]",	"XData",	0x620c,	1,	base=16,	modified
 sfr = "USBCNTH",	"XData",	0x6217,	1,	base=16,	modified
-sfr = "P1IFG.P1IF_1",	"SFR",	0x8a,	1,	base=16,	modified
-sfr = "P1IFG.P1IF_0",	"SFR",	0x8a,	1,	base=16,	modified
 
 
 [SfrGroupInfo]
