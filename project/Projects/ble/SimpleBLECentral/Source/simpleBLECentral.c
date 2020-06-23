@@ -75,7 +75,7 @@
 #define DEFAULT_MAX_SCAN_RES                  8 // 最大扫描从机个数，最大为8， 2540 为3 
 
 // Scan duration in ms
-#define DEFAULT_SCAN_DURATION                 3000 // 开始扫描到返回扫描结果的时间间隔， 不能太小的原因是与从机的广播间隔有关
+#define DEFAULT_SCAN_DURATION                 5000 // 开始扫描到返回扫描结果的时间间隔， 不能太小的原因是与从机的广播间隔有关
 
 // Discovey mode (limited, general, all)
 #define DEFAULT_DISCOVERY_MODE                DEVDISC_MODE_ALL // 扫描所有从机， 当然你可以指定扫描
@@ -147,9 +147,26 @@ enum
 {
   BLE_DISC_STATE_IDLE,                // Idle
   BLE_DISC_STATE_SVC,                 // Service discovery
-  BLE_DISC_STATE_CHAR                 // Characteristic discovery
+  BLE_DISC_STATE_CHAR,               // Characteristic discovery
+  BLE_DISC_STATE_CHAR2,     
+  BLE_DISC_STATE_CHAR3,     
+  BLE_DISC_STATE_CHAR4,     
+  BLE_DISC_STATE_CHAR5, 
+  BLE_DISC_STATE_CHAR6, 
 };
 
+
+// 这个枚举定义了选择哪个数据通道，即特征值
+enum
+{
+    BLE_CHAR1 = 0,
+    BLE_CHAR2,
+    BLE_CHAR3,
+    BLE_CHAR4,
+    BLE_CHAR5,
+    BLE_CHAR6,
+    BLE_CHAR7,
+};
 /*********************************************************************
  * TYPEDEFS
  */
@@ -283,11 +300,17 @@ static uint8 __g_beat_flag = 0;
 
 
 
-//// 做内存清空处理
-//static void memory_to_empty()
-//{
-//    
-//}
+// 做内存清空处理
+static void memory_to_empty()
+{
+    uint8 i = 0;
+    for (i = 0; i < DEFAULT_MAX_SCAN_RES; i++) {
+        simpleBLEDevList[i].eventType = 0;
+        simpleBLEDevList[i].addrType  = 0;
+        osal_memset(simpleBLEDevList[i].addr, 0, B_ADDR_LEN);
+    }
+    simpleBLEScanRes = 0;  
+}
 
 //定时器T3中断处理函数
 #pragma vector = T3_VECTOR 
@@ -296,53 +319,34 @@ __interrupt void T3_ISR(void)
     IRCON = 0x00;               //清中断标志, 也可由硬件自动完成 
     
     
-    if(count++ > 6000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
+    if(count++ > 8000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
     {                           //经过示波器测量确保精确
         count = 0;              //计数清零 
-        
-        if (osal_continuous_scan_flag == 1) {
-            //LED2 = ~LED2;       //改变LED1的状态 
+        //NPI_PrintString("clk\n");
+        if ((osal_continuous_scan_flag == 1) && (simpleBLEScanning != TRUE)) {
             
-            attWriteReq_t AttReq;       
-            uint8 ValueBuf[1];
-            
-            
-             //如果心跳状态为0 则断开连接
+            NPI_PrintString("scan\n");
+            //如果心跳状态为0 则断开连接
             if ((__g_beat_flag == 1) ) {
                 GAPCentralRole_TerminateLink(simpleBLEConnHandle);
                 simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
             }
             
+            memory_to_empty();
             
-            uint8 i = 0;
-            
-            for (i = 0; i < DEFAULT_MAX_SCAN_RES; i++) {
-                simpleBLEDevList[i].eventType = 0;
-                simpleBLEDevList[i].addrType  = 0;
-                memset(simpleBLEDevList[i].addr, 0, B_ADDR_LEN);
-            }
-            
-            simpleBLEScanRes = 0;
-            
-            
+            simpleBLEScanning = TRUE;   // 在扫描设备之前保证这个flag = true
+            //osal_continuous_scan_flag = 0;
             // 定时器执行扫描函数
             GAPCentralRole_StartDiscovery( DEFAULT_DISCOVERY_MODE, // DEFAULT_DISCOVERY_MODE,
-                                           DEFAULT_DISCOVERY_ACTIVE_SCAN,
-                                           DEFAULT_DISCOVERY_WHITE_LIST );  
+                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
+                                          DEFAULT_DISCOVERY_WHITE_LIST );  
             
             
             __g_beat_flag = 1;  //  设置心跳状态为0 
-            
-        }   
+        }
     } 
 }
 
-
-
-
-
-
-//extern int osal_continuous_scan_flag;  //  在主函数定义的flag
 
 //数组比较函数，两个数组完全相等返回TRUE,否则返回FALSE
 static bool isArrayEqual(uint8 arr1[],uint8 arr2[],uint8 arr1_length,uint8 arr2_length)
@@ -494,7 +498,7 @@ uint16 SimpleBLECentral_ProcessEvent( uint8 task_id, uint16 events )
     return (events ^ SYS_EVENT_MSG);
   }
 
-  if ( events & START_DEVICE_EVT ) // 初始化后就执行这个啦
+  if ( events & START_DEVICE_EVT ) // 初始化后就执行这个
   {
     // Start the Device
     VOID GAPCentralRole_StartDevice( (gapCentralRoleCB_t *) &simpleBLERoleCB );
@@ -512,10 +516,6 @@ uint16 SimpleBLECentral_ProcessEvent( uint8 task_id, uint16 events )
                                      DEFAULT_DISCOVERY_WHITE_LIST );   
       LCD_WRITE_STRING( "Scanning...", HAL_LCD_LINE_1 );
     }
-//    else
-//    {
-//      LCD_WRITE_STRING( "No Scan", HAL_LCD_LINE_1 );
-//    }
 
     return ( events ^ START_DEVICE_EVT );
   }
@@ -525,6 +525,17 @@ uint16 SimpleBLECentral_ProcessEvent( uint8 task_id, uint16 events )
     simpleBLECentralStartDiscovery( );
     
     return ( events ^ START_DISCOVERY_EVT );
+  }
+  
+  
+  
+  if ( events & AUTO_DISC_EVT )
+  {
+      NPI_PrintString("AUTO_DISC_EVT\n");
+
+      
+      //osal_start_timerEx(simpleBLETaskId, AUTO_DISC_EVT, 5000);
+      return ( events ^ AUTO_DISC_EVT );
   }
   
   
@@ -729,7 +740,7 @@ static void simpleBLECentralProcessGATTMsg( gattMsgEvent_t *pMsg )
         {
         
             //NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],14 );
-            NPI_PrintValue("char4: ", pMsg->msg.handleValueNoti.value[0], 10); 
+            //NPI_PrintValue("char4: ", pMsg->msg.handleValueNoti.value[0], 10); 
             
             __g_beat_flag = 2;
         }
@@ -782,6 +793,8 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
                                      pEvent->deviceInfo.pEvtData,
                                      pEvent->deviceInfo.dataLen ) )
           {
+              
+              //NPI_PrintString("GAP_DEVICE_INFO_EVENT \n");
             //向设备发现列表中添加一个设备
             simpleBLEAddDeviceInfo( pEvent->deviceInfo.addr, pEvent->deviceInfo.addrType );
           }
@@ -790,15 +803,15 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
       break;
       
     case GAP_DEVICE_DISCOVERY_EVENT: //设备发现完成
-        {
-            // discovery complete
+        {    
+            //halIntState_t intState;
+            
+            //NPI_PrintString("GAP_DEVICE_DISCOVERY_EVENT \n");
+            
+            //HAL_ENTER_CRITICAL_SECTION(intState);
+            
+            
             simpleBLEScanning = FALSE;
-            
-            
-            
-            //osal_memset(simpleBLEDevList, 0, DEFAULT_MAX_SCAN_RES);
-                
-                
             // if not filtering device discovery results based on service UUID
             if ( DEFAULT_DEV_DISC_BY_SVC_UUID == FALSE )
             {
@@ -807,6 +820,8 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
                 osal_memcpy( simpleBLEDevList, pEvent->discCmpl.pDevList,
                             (sizeof( gapDevRec_t ) * pEvent->discCmpl.numDevs) );
             }
+            //HAL_EXIT_CRITICAL_SECTION(intState);
+            
             
             LCD_WRITE_STRING_VALUE( "Devices Found", simpleBLEScanRes,
                                    10, HAL_LCD_LINE_1 );
@@ -876,7 +891,9 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
             }
             // initialize scan index to last device
             simpleBLEScanIdx = simpleBLEScanRes;
-            
+            //osal_continuous_scan_flag = 1;
+            // discovery complete
+            //simpleBLEScanning = FALSE;
         }
       break;
 
@@ -913,6 +930,8 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
                 simpleBLERssi = FALSE;
                 simpleBLEDiscState = BLE_DISC_STATE_IDLE;
                 
+                simpleBLEScanning = FALSE;
+                
                 LCD_WRITE_STRING( "Connect Failed", HAL_LCD_LINE_1 );
                 LCD_WRITE_STRING_VALUE( "Reason:", pEvent->gap.hdr.status, 10, HAL_LCD_LINE_2 );
                 HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF );   //关LED3
@@ -936,6 +955,8 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
             
             
             NPI_PrintValue("handle : ", pEvent->linkTerminate.connectionHandle, 10);
+            
+            simpleBLEScanning = FALSE;
             //NPI_WriteTransport("YYY YY\n", 7);
         }
       break;
@@ -1088,7 +1109,7 @@ static void simpleBLEGATTDiscoveryEvent( gattMsgEvent_t *pMsg )
             if ( simpleBLESvcStartHdl != 0 )
             {
                 // Discover characteristic
-                simpleBLEDiscState = BLE_DISC_STATE_CHAR;
+                simpleBLEDiscState = BLE_DISC_STATE_CHAR6;
                 
                 req.startHandle = simpleBLESvcStartHdl;
                 req.endHandle = simpleBLESvcEndHdl;
@@ -1100,7 +1121,7 @@ static void simpleBLEGATTDiscoveryEvent( gattMsgEvent_t *pMsg )
             }
         }
     }
-    else if ( simpleBLEDiscState == BLE_DISC_STATE_CHAR )
+    else if ( simpleBLEDiscState == BLE_DISC_STATE_CHAR6 )
     {
         // Characteristic found, store handle
         if ( pMsg->method == ATT_READ_BY_TYPE_RSP && 
@@ -1115,8 +1136,8 @@ static void simpleBLEGATTDiscoveryEvent( gattMsgEvent_t *pMsg )
         
         simpleBLEDiscState = BLE_DISC_STATE_IDLE;
         
-        
-        osal_start_timerEx(11, 0x0004, 3000);
+        __g_beat_flag = 2;
+        osal_start_timerEx(simpleBLETaskId, ENABLE_CHAR4_NOTICE_EVT, 1000);
     }    
 }
 
