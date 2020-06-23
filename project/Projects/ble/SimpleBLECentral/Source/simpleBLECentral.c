@@ -283,6 +283,12 @@ static uint8 __g_beat_flag = 0;
 
 
 
+//// 做内存清空处理
+//static void memory_to_empty()
+//{
+//    
+//}
+
 //定时器T3中断处理函数
 #pragma vector = T3_VECTOR 
 __interrupt void T3_ISR(void) 
@@ -290,7 +296,7 @@ __interrupt void T3_ISR(void)
     IRCON = 0x00;               //清中断标志, 也可由硬件自动完成 
     
     
-    if(count++ > 8000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
+    if(count++ > 6000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
     {                           //经过示波器测量确保精确
         count = 0;              //计数清零 
         
@@ -301,34 +307,28 @@ __interrupt void T3_ISR(void)
             uint8 ValueBuf[1];
             
             
-            
-            
-            
              //如果心跳状态为0 则断开连接
-            if ((__g_beat_flag == 1) && (GAP_CONNHANDLE_INIT != simpleBLEConnHandle)) {
+            if ((__g_beat_flag == 1) ) {
                 GAPCentralRole_TerminateLink(simpleBLEConnHandle);
                 simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
             }
             
             
+            uint8 i = 0;
             
+            for (i = 0; i < DEFAULT_MAX_SCAN_RES; i++) {
+                simpleBLEDevList[i].eventType = 0;
+                simpleBLEDevList[i].addrType  = 0;
+                memset(simpleBLEDevList[i].addr, 0, B_ADDR_LEN);
+            }
             
-            
-            
-            AttReq.handle = 0x0025; // 0x0039; 
-            AttReq.len = 1;
-            AttReq.sig = 0;
-            AttReq.cmd = 0;
-            ValueBuf[0] = 0x08;
-            //ValueBuf[1] = 0x00;
-            osal_memcpy(AttReq.value,ValueBuf,1);
-            GATT_WriteCharValue( 0, &AttReq, simpleBLETaskId );
+            simpleBLEScanRes = 0;
             
             
             // 定时器执行扫描函数
             GAPCentralRole_StartDiscovery( DEFAULT_DISCOVERY_MODE, // DEFAULT_DISCOVERY_MODE,
-                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
-                                          DEFAULT_DISCOVERY_WHITE_LIST );  
+                                           DEFAULT_DISCOVERY_ACTIVE_SCAN,
+                                           DEFAULT_DISCOVERY_WHITE_LIST );  
             
             
             __g_beat_flag = 1;  //  设置心跳状态为0 
