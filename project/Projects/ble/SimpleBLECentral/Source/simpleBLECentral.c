@@ -71,11 +71,16 @@
  * CONSTANTS
  */
 
+// 系统定时器间隔时间
+#define SBP_PERIODIC_EVT_PERIOD               1600 //ms 连接从机的间隔，不能太短， 建议时间
+
+
+
 // Maximum number of scan responses
 #define DEFAULT_MAX_SCAN_RES                  8 // 最大扫描从机个数，最大为8， 2540 为3 
 
 // Scan duration in ms
-#define DEFAULT_SCAN_DURATION                 5000 // 开始扫描到返回扫描结果的时间间隔， 不能太小的原因是与从机的广播间隔有关
+#define DEFAULT_SCAN_DURATION                 3000 // 开始扫描到返回扫描结果的时间间隔， 不能太小的原因是与从机的广播间隔有关
 
 // Discovey mode (limited, general, all)
 #define DEFAULT_DISCOVERY_MODE                DEVDISC_MODE_ALL // 扫描所有从机， 当然你可以指定扫描
@@ -127,7 +132,7 @@
 #define DEFAULT_IO_CAPABILITIES               GAPBOND_IO_CAP_DISPLAY_ONLY
 
 // Default service discovery timer delay in ms
-#define DEFAULT_SVC_DISCOVERY_DELAY           500 // 这个的意思是连接上从机后延时多长时间去获取从机的服务， 为了加快速度，这里我们设置为 500ms
+#define DEFAULT_SVC_DISCOVERY_DELAY           100 // 这个的意思是连接上从机后延时多长时间去获取从机的服务， 为了加快速度，这里我们设置为 100ms
 
 
 // TRUE to filter discovery results on desired service UUID
@@ -153,6 +158,7 @@ enum
   BLE_DISC_STATE_CHAR4,     
   BLE_DISC_STATE_CHAR5, 
   BLE_DISC_STATE_CHAR6, 
+  BLE_DISC_STATE_CHAR7, 
 };
 
 
@@ -232,6 +238,88 @@ static bool simpleBLEDoWrite = FALSE;
 
 // GATT read/write procedure state
 static bool simpleBLEProcedureInProgress = FALSE;
+
+
+static uint8 connectedPeripheralNum = 0;
+
+#define  MAX_PERIPHERAL_NUM   DEFAULT_MAX_SCAN_RES
+#define  MAX_CHAR_NUM         7
+
+
+
+//把上面屏蔽的这些参数放到一个结构体中去， 方便我们做1主3从的连接控制， 相当于每一个连接有一组自己的参数
+typedef struct ble_dev{
+    
+    uint16 simpleBLEConnHandle;             // 连接上后的handle值， 用于对该设备的操作， 这是个源头， 根据这个handle 可以得到很多你需要的参数
+    uint8 simpleBLEDevIdx;                  // 设备下标 0xff 我无效值
+    
+    uint8 simpleBLEState;                   // 连接状态， 比如空闲、连接中、已连接、连接断开等
+ 
+    uint8 simpleBLEDiscState;               // 发现状态，
+    
+    uint16 simpleBLESvcStartHdl;            // 服务的开始handle
+    uint16 simpleBLESvcEndHdl;              // 服务的结束handle
+    
+    uint16 simpleBLECharHdl[MAX_CHAR_NUM];  // 特征值handle， 用于读写数据
+    
+    uint8 simpleBLECharVal;                 // 用于写数据
+    
+    uint8 simpleBLERssi;                    // 是否查询 rssi 值， 这个查询必须是在连接从机之后才可以查询
+    
+    bool simpleBLEDoWrite;                  // 是否在可写数据， 否则就可以读数据
+    
+    bool simpleBLEProcedureInProgress;      // [MAX_PERIPHERAL_NUM] = FALSE; // 是否正在操作中
+    
+    int8 rssi;                              // rssi 信号值
+    
+    bool updateFlag;                        // 参数更新 
+}ble_dev_t;
+
+
+
+
+
+// 用于 对上面的 BLE_DEV 这个结构体的初始化 
+// 该结构体在任务初始化中，设备连接失败，设备断开连接中赋值
+static const ble_dev_t __g_dev_init_value =
+{
+    GAP_CONNHANDLE_INIT,    // simpleBLEConnHandle;
+    0xff,                   // 设备下标 0xff 我无效值 simpleBLEDevIdx
+
+    BLE_STATE_IDLE,         // simpleBLEState
+ 
+    BLE_DISC_STATE_IDLE,    // simpleBLEDiscState 
+
+    0,                      // uint16 simpleBLESvcStartHdl = 0;
+    0,                      // uint16 simpleBLESvcEndHdl = 0;
+
+    {0, 0, 0, 0, 0, 0},     // uint16 simpleBLECharHdl
+
+    0,                      // uint8 simpleBLECharVal = 0;
+
+    FALSE,                  // 是否查询 rssi 值， 这个查询必须是在连接从机之后才可以查询 simpleBLERssi
+
+    TRUE,                   // bool simpleBLEDoWrite = FALSE;
+
+    FALSE,                  // bool simpleBLEProcedureInProgress
+    
+    0,                      // rssi 信号值
+
+    FALSE,                  // 参数更新 updateFlag
+};
+
+
+//定义每一个从机连接数组
+static ble_dev_t __g_dev[MAX_PERIPHERAL_NUM] = {0};  
+
+
+
+
+
+
+
+
+
 
 /*********************************************************************
  * LOCAL FUNCTIONS
@@ -319,7 +407,7 @@ __interrupt void T3_ISR(void)
     IRCON = 0x00;               //清中断标志, 也可由硬件自动完成 
     
     
-    if(count++ > 8000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
+    if(count++ > 7000)          //245次中断后LED取反，闪烁一轮（约为245 -> 0.5 秒时间） 
     {                           //经过示波器测量确保精确
         count = 0;              //计数清零 
         //NPI_PrintString("clk\n");
@@ -338,8 +426,8 @@ __interrupt void T3_ISR(void)
             //osal_continuous_scan_flag = 0;
             // 定时器执行扫描函数
             GAPCentralRole_StartDiscovery( DEFAULT_DISCOVERY_MODE, // DEFAULT_DISCOVERY_MODE,
-                                          DEFAULT_DISCOVERY_ACTIVE_SCAN,
-                                          DEFAULT_DISCOVERY_WHITE_LIST );  
+                                           DEFAULT_DISCOVERY_ACTIVE_SCAN,
+                                           DEFAULT_DISCOVERY_WHITE_LIST );  
             
             
             __g_beat_flag = 1;  //  设置心跳状态为0 
@@ -418,6 +506,15 @@ void SimpleBLECentral_Init( uint8 task_id )
   NPI_InitTransport(NpiSerialCallback);
   NPI_WriteTransport("Hello World\n",12);
 
+  
+  // 初始化结构体
+  for(int i = 0; i < MAX_PERIPHERAL_NUM; i++) {
+      osal_memcpy(&(__g_dev[i]), &__g_dev_init_value, sizeof(ble_dev_t));
+  }
+  
+  
+  
+  
   // Setup Central Profile
   {
     uint8 scanRes = DEFAULT_MAX_SCAN_RES;
@@ -899,6 +996,11 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
 
     case GAP_LINK_ESTABLISHED_EVENT: //设备连接
         {
+            ble_dev_t *p = &(__g_dev[simpleBLEScanIdx]);
+            p->simpleBLEDevIdx = simpleBLEScanIdx;
+            
+            
+            
             if ( pEvent->gap.hdr.status == SUCCESS )
             {          
                 simpleBLEState = BLE_STATE_CONNECTED;
@@ -932,6 +1034,11 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
                 
                 simpleBLEScanning = FALSE;
                 
+                
+                
+                osal_memcpy(p, &__g_dev_init_value, sizeof(ble_dev_t));
+                
+                
                 LCD_WRITE_STRING( "Connect Failed", HAL_LCD_LINE_1 );
                 LCD_WRITE_STRING_VALUE( "Reason:", pEvent->gap.hdr.status, 10, HAL_LCD_LINE_2 );
                 HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF );   //关LED3
@@ -941,12 +1048,23 @@ static void simpleBLECentralEventCB( gapCentralRoleEvent_t *pEvent )
 
     case GAP_LINK_TERMINATED_EVENT: //断开连接
         {
+            ble_dev_t *p = &(__g_dev[simpleBLEScanIdx]);
+            
+            connectedPeripheralNum--;
+            
             simpleBLEState = BLE_STATE_IDLE;
             simpleBLEConnHandle = GAP_CONNHANDLE_INIT;
             simpleBLERssi = FALSE;
             simpleBLEDiscState = BLE_DISC_STATE_IDLE;
             simpleBLECharHdl = 0;
             simpleBLEProcedureInProgress = FALSE;
+            
+            
+            // 初始化
+            osal_memcpy(p, &__g_dev_init_value, sizeof(ble_dev_t));
+            
+            
+            
             
             LCD_WRITE_STRING( "Disconnected", HAL_LCD_LINE_1 );
             LCD_WRITE_STRING_VALUE( "Reason:", pEvent->linkTerminate.reason,

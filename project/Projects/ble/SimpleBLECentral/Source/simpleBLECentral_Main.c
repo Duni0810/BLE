@@ -127,7 +127,7 @@ int main(void)
     InitBoard( OB_COLD );
     
     /* Initialze the HAL driver */
-    HalDriverInit();
+    HalDriverInit(); 
     
     /* Initialize NV system */
     osal_snv_init();

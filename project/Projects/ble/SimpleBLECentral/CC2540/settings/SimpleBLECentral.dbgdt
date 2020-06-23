@@ -19,7 +19,7 @@
           
           
           
-        <Column0>318</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>167</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       <PreferedWindows><Position>1</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Workspace>
       <Disassembly>
         <col-names>
@@ -39,7 +39,7 @@
       
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-19691-27394</Identity>
@@ -55,20 +55,20 @@
           </Tab>
         <Tab><Identity>TabID-227-24875</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab><Identity>TabID-19067-27423</Identity><TabName>Find All Declarations</TabName><Factory>Find-All-Declarations</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-15746-24457</Identity><TabName>Workspace</TabName><Factory>Workspace</Factory><Session><NodeDict><ExpandedNode>SimpleBLECentral</ExpandedNode><ExpandedNode>SimpleBLECentral/NPI</ExpandedNode><ExpandedNode>SimpleBLECentral/PROFILES</ExpandedNode></NodeDict></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-15746-24457</Identity><TabName>Workspace</TabName><Factory>Workspace</Factory><Session><NodeDict><ExpandedNode>SimpleBLECentral</ExpandedNode><ExpandedNode>SimpleBLECentral/NPI</ExpandedNode><ExpandedNode>SimpleBLECentral/PROFILES</ExpandedNode></NodeDict></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\simpleBLECentral.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>315</YPos2><SelStart2>11597</SelStart2><SelEnd2>11597</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\simpleBLECentral_Main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>101</YPos2><SelStart2>4891</SelStart2><SelEnd2>4891</SelEnd2></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\Components\ble\include\gap.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>853</YPos2><SelStart2>44242</SelStart2><SelEnd2>44242</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\Components\osal\common\OSAL.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>1122</YPos2><SelStart2>30585</SelStart2><SelEnd2>30585</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\Components\hal\target\CC2540EB\hal_mcu.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>95</YPos2><SelStart2>5180</SelStart2><SelEnd2>5180</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\Components\osal\common\OSAL_Memory.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>537</YPos2><SelStart2>19545</SelStart2><SelEnd2>19545</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Source\simpleBLECentral.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>64</YPos2><SelStart2>3176</SelStart2><SelEnd2>3176</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\common\npi\npi_np\npi.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>120</YPos2><SelStart2>0</SelStart2><SelEnd2>0</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\common\npi\npi_np\npi.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>118</YPos2><SelStart2>5074</SelStart2><SelEnd2>5088</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Profiles\SimpleProfile\simpleGATTprofile.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>62</YPos2><SelStart2>3788</SelStart2><SelEnd2>3788</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Profiles\Roles\central.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>268</YPos2><SelStart2>8133</SelStart2><SelEnd2>8133</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-049afa28><key>iaridepm.enu1</key></Toolbar-049afa28></Sizes></Row0><Row1><Sizes><Toolbar-12eaa628><key>debuggergui.enu1</key></Toolbar-12eaa628></Sizes></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>512</Bottom><Right>392</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>130208</sizeHorzCX><sizeHorzCY>256082</sizeHorzCY><sizeVertCX>256510</sizeVertCX><sizeVertCY>658131</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>200</Bottom><Right>1538</Right><x>-2</x><y>-2</y><xscreen>1540</xscreen><yscreen>202</yscreen><sizeHorzCX>1002604</sizeHorzCX><sizeHorzCY>258643</sizeHorzCY><sizeVertCX>261068</sizeVertCX><sizeVertCY>258643</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-047afa28><key>iaridepm.enu1</key></Toolbar-047afa28></Sizes></Row0><Row1><Sizes><Toolbar-08946e88><key>debuggergui.enu1</key></Toolbar-08946e88></Sizes></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>512</Bottom><Right>241</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>130208</sizeHorzCX><sizeHorzCY>256082</sizeHorzCY><sizeVertCX>158203</sizeVertCX><sizeVertCY>658131</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>200</Bottom><Right>1538</Right><x>-2</x><y>-2</y><xscreen>1540</xscreen><yscreen>202</yscreen><sizeHorzCX>1002604</sizeHorzCX><sizeHorzCY>258643</sizeHorzCY><sizeVertCX>261068</sizeVertCX><sizeVertCY>258643</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 
