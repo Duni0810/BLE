@@ -16,11 +16,9 @@ sfr = "P2",	"SFR",	0xa0,	1,	base=16,	modified
 sfr = "IEN0",	"SFR",	0xa8,	1,	base=16,	modified
 sfr = "IEN1",	"SFR",	0xb8,	1,	base=16,	modified
 sfr = "IEN2",	"SFR",	0x9a,	1,	base=16,	modified
-sfr = "TCON",	"SFR",	0x88,	1,	base=16,	modified
-sfr = "S0CON",	"SFR",	0x98,	1,	base=16,	modified
-sfr = "S1CON",	"SFR",	0x9b,	1,	base=16,	modified
 sfr = "IRCON",	"SFR",	0xc0,	1,	base=16,	modified
 sfr = "IRCON2",	"SFR",	0xe8,	1,	base=16,	modified
+sfr = "IP1",	"SFR",	0xb9,	1,	base=16,	modified
 sfr = "IP0",	"SFR",	0xa9,	1,	base=16,	modified
 sfr = "ACC",	"SFR",	0xe0,	1,	base=16,	modified
 sfr = "DPS",	"SFR",	0x92,	1,	base=16,	modified
@@ -126,21 +124,8 @@ sfr = "U0UCR",	"SFR",	0xc4,	1,	base=16,	modified
 sfr = "U0GCR",	"SFR",	0xc5,	1,	base=16,	modified
 sfr = "U0DBUF",	"SFR",	0xc1,	1,	base=16,	modified
 sfr = "U0BAUD",	"SFR",	0xc2,	1,	base=16,	modified
-sfr = "U0BAUD.BAUD_M",	"SFR",	0xc2,	1,	base=16,	modified
-sfr = "U1CSR",	"SFR",	0xf8,	1,	base=16,	modified
-sfr = "U1UCR",	"SFR",	0xfb,	1,	base=16,	modified
-sfr = "U1GCR",	"SFR",	0xfc,	1,	base=16,	modified
-sfr = "U1DBUF",	"SFR",	0xf9,	1,	base=16,	modified
-sfr = "U1BAUD",	"SFR",	0xfa,	1,	base=16,	modified
-sfr = "U1BAUD.BAUD_M",	"SFR",	0xfa,	1,	base=16,	modified
 sfr = "WDCTL",	"SFR",	0xc9,	1,	base=16,	modified
 sfr = "FCTL",	"XData",	0x6270,	1,	base=16,	modified
-sfr = "FADDRL",	"XData",	0x6271,	1,	base=16,	modified
-sfr = "FADDRH",	"XData",	0x6272,	1,	base=16,	modified
-sfr = "FWDATA",	"XData",	0x6273,	1,	base=16,	modified
-sfr = "RFSTAT",	"XData",	0x618d,	1,	base=16,	modified
-sfr = "ATEST",	"XData",	0x61a9,	1,	base=16,	modified
-sfr = "RFC_OBS_CTRL0",	"XData",	0x61ae,	1,	base=16,	modified
 sfr = "RFC_OBS_CTRL1",	"XData",	0x61af,	1,	base=16,	modified
 sfr = "RFC_OBS_CTRL2",	"XData",	0x61b0,	1,	base=16,	modified
 sfr = "DBGDATA",	"XData",	0x6260,	1,	base=16,	modified
@@ -166,7 +151,6 @@ sfr = "USBMAXI",	"XData",	0x6210,	1,	base=16,	modified
 sfr = "USBCS0-USBCSIL",	"XData",	0x6211,	1,	base=16,	modified
 sfr = "USBCSIH",	"XData",	0x6212,	1,	base=16,	modified
 sfr = "USBMAXO",	"XData",	0x6213,	1,	base=16,	modified
-sfr = "USBCSOL",	"XData",	0x6214,	1,	base=16,	modified
 sfr = "USBCSOH",	"XData",	0x6215,	1,	base=16,	modified
 sfr = "USBCNT0-USBCNTL",	"XData",	0x6216,	1,	base=16,	modified
 sfr = "USBCNTH",	"XData",	0x6217,	1,	base=16,	modified
@@ -176,40 +160,113 @@ sfr = "USBF2",	"XData",	0x6224,	1,	base=16,	modified
 sfr = "USBF3",	"XData",	0x6226,	1,	base=16,	modified
 sfr = "USBF4",	"XData",	0x6228,	1,	base=16,	modified
 sfr = "USBF5",	"XData",	0x622a,	1,	base=16,	modified
-sfr = "IP1",	"SFR",	0xb9,	1,	base=16,	modified
-sfr = "IP0.IP0_IPG1",	"SFR",	0xa9,	1,	base=16,	modified
-sfr = "DMAIRQ.DMAIF4",	"SFR",	0xd1,	1,	base=16,	modified
-sfr = "IP1",	"SFR",	0xb9,	1,	base=16,	modified
+sfr = "IEN2.UTX0IE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "IEN2.P2IE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "IEN2.RFIE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "TCON",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.URX1IF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.ADCIF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.URX0IF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.IT1",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.RFERRIF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.IT0",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "S0CON",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S0CON.ENCIF_1",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S0CON.ENCIF_0",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S1CON",	"SFR",	0x9b,	1,	base=16,	modified
+sfr = "S1CON.RFIF_1",	"SFR",	0x9b,	1,	base=16,	modified
+sfr = "U0BAUD.BAUD_M",	"SFR",	0xc2,	1,	base=16,	modified
+sfr = "U1CSR",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.MODE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.RE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.SLAVE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.FE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.ERR",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.RX_BYTE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.TX_BYTE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.ACTIVE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1UCR",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.FLUSH",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.FLOW",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.D9",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.BIT9",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.PARITY",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.SPB",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.STOP",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.START",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1GCR",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1GCR.CPOL",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1GCR.CPHA",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1GCR.ORDER",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1GCR.BAUD_E",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1DBUF",	"SFR",	0xf9,	1,	base=16,	modified
+sfr = "U1BAUD",	"SFR",	0xfa,	1,	base=16,	modified
+sfr = "U1BAUD.BAUD_M",	"SFR",	0xfa,	1,	base=16,	modified
+sfr = "WDCTL.INT",	"SFR",	0xc9,	1,	base=16,	modified
+sfr = "FCTL.BUSY",	"XData",	0x6270,	1,	base=16,	modified
+sfr = "FCTL.FULL",	"XData",	0x6270,	1,	base=16,	modified
+sfr = "FCTL.ABORT",	"XData",	0x6270,	1,	base=16,	modified
+sfr = "FCTL.WRITE",	"XData",	0x6270,	1,	base=16,	modified
+sfr = "FCTL.ERASE",	"XData",	0x6270,	1,	base=16,	modified
+sfr = "FADDRL",	"XData",	0x6271,	1,	base=16,	modified
+sfr = "FADDRH",	"XData",	0x6272,	1,	base=16,	modified
+sfr = "FWDATA",	"XData",	0x6273,	1,	base=16,	modified
+sfr = "RFSTAT",	"XData",	0x618d,	1,	base=16,	modified
+sfr = "RFSTAT.MOD_UNDERFLOW",	"XData",	0x618d,	1,	base=16,	modified
+sfr = "RFSTAT.TX_ACTIVE",	"XData",	0x618d,	1,	base=16,	modified
+sfr = "ATEST",	"XData",	0x61a9,	1,	base=16,	modified
+sfr = "ATEST.ATEST_CTRL",	"XData",	0x61a9,	1,	base=16,	modified
+sfr = "RFC_OBS_CTRL0",	"XData",	0x61ae,	1,	base=16,	modified
+sfr = "RFC_OBS_CTRL0.RFC_OBS_POL0",	"XData",	0x61ae,	1,	base=16,	modified
+sfr = "USBCIF.RSTIF",	"XData",	0x6206,	1,	base=16,	modified
+sfr = "USBIIE.INEP2IE",	"XData",	0x6207,	1,	base=16,	modified
+sfr = "USBINDEX.USBINDEX",	"XData",	0x620e,	1,	base=16,	modified
+sfr = "USBCSOL",	"XData",	0x6214,	1,	base=16,	modified
+sfr = "USBCSOL.OUTPKT_RDY",	"XData",	0x6214,	1,	base=16,	modified
+sfr = "TCON",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "S0CON",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S1CON",	"SFR",	0x9b,	1,	base=16,	modified
+sfr = "U0BAUD.BAUD_M",	"SFR",	0xc2,	1,	base=16,	modified
+sfr = "U1CSR",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1UCR",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1GCR",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1DBUF",	"SFR",	0xf9,	1,	base=16,	modified
+sfr = "U1BAUD",	"SFR",	0xfa,	1,	base=16,	modified
+sfr = "U1BAUD.BAUD_M",	"SFR",	0xfa,	1,	base=16,	modified
+sfr = "FADDRL",	"XData",	0x6271,	1,	base=16,	modified
+sfr = "FADDRH",	"XData",	0x6272,	1,	base=16,	modified
+sfr = "FWDATA",	"XData",	0x6273,	1,	base=16,	modified
+sfr = "RFSTAT",	"XData",	0x618d,	1,	base=16,	modified
+sfr = "ATEST",	"XData",	0x61a9,	1,	base=16,	modified
+sfr = "RFC_OBS_CTRL0",	"XData",	0x61ae,	1,	base=16,	modified
+sfr = "USBCSOL",	"XData",	0x6214,	1,	base=16,	modified
 
 
 [SfrGroupInfo]
 group = "Custom", "ADCL", "ADCH", "RNDL", "RNDH", "ADCCON1", "ADCCON2"
 group = "Custom", "ADCCON3", "TR0", "ENCDI", "ENCDO", "ENCCS", "P0"
-group = "Custom", "P1", "P2", "IEN0", "IEN1", "IEN2", "TCON"
-group = "Custom", "S0CON", "S1CON", "IRCON", "IRCON2", "IP0", "ACC"
-group = "Custom", "DPS", "MPAGE", "DMAIRQ", "DMA1CFGL", "DMA1CFGH", "DMA0CFGL"
-group = "Custom", "DMA0CFGH", "DMAARM", "DMAREQ", "P0IFG", "P1IFG", "P2IFG"
-group = "Custom", "PICTL", "P0IEN", "P1IEN", "P2IEN", "P0INP", "PERCFG"
-group = "Custom", "APCFG", "P0SEL", "P1SEL", "P2SEL", "P1INP", "P2INP"
-group = "Custom", "P0DIR", "P1DIR", "P2DIR", "PMUX", "OBSSEL0", "OBSSEL1"
-group = "Custom", "OBSSEL2", "OBSSEL3", "OBSSEL4", "OBSSEL5", "MEMCTR", "FMAP"
-group = "Custom", "ST0", "ST1", "ST2", "STLOAD", "STCC", "STCS"
-group = "Custom", "STCV0", "STCV1", "STCV2", "OPAMPMC", "OPAMPC", "OPAMPS"
-group = "Custom", "CMPCTL", "PCON", "SLEEPCMD", "SLEEPSTA", "CLKCONCMD", "CLKCONSTA"
-group = "Custom", "CLD", "T1CNTH", "T1CNTL", "T1CTL", "T1STAT", "T1CCTL0"
-group = "Custom", "T1CC0H", "T1CC0L", "T1CCTL1", "T1CC1H", "T1CC1L", "T1CCTL2"
-group = "Custom", "T1CC2H", "T1CC2L", "T1CCTL3", "T1CC3H", "T1CC3L", "T1CCTL4"
-group = "Custom", "T1CC4H", "T1CC4L", "IRCTL", "T2MSEL", "T2M0", "T2M1"
-group = "Custom", "T2MOVF0", "T2MOVF1", "T2MOVF2", "T2IRQF", "T2IRQM", "T2CTRL"
-group = "Custom", "T2EVTCFG", "T3CNT", "T3CTL", "T3CCTL0", "T3CC0", "T3CCTL1"
-group = "Custom", "T3CC1", "T4CNT", "T4CTL", "T4CCTL0", "T4CC0", "T4CCTL1"
-group = "Custom", "T4CC1", "TIMIF", "U0CSR", "U0UCR", "U0GCR", "U0DBUF"
-group = "Custom", "U0BAUD", "U0BAUD.BAUD_M", "U1CSR", "U1UCR", "U1GCR", "U1DBUF"
-group = "Custom", "U1BAUD", "U1BAUD.BAUD_M", "WDCTL", "FCTL", "FADDRL", "FADDRH"
-group = "Custom", "FWDATA", "RFSTAT", "ATEST", "RFC_OBS_CTRL0", "RFC_OBS_CTRL1", "RFC_OBS_CTRL2"
-group = "Custom", "DBGDATA", "CHVER", "CHVER.VERSION", "CHIPID", "CHIPINFO0", "CHIPINFO1"
-group = "Custom", "USBADDR", "USBPOW", "USBIIF", "USBOIF", "USBCIF", "USBIIE"
-group = "Custom", "USBOIE", "USBCIE", "USBFRML", "USBFRML.FRAME[7:0]", "USBFRMH", "USBINDEX"
-group = "Custom", "USBCTRL", "USBMAXI", "USBCS0-USBCSIL", "USBCSIH", "USBMAXO", "USBCSOL"
-group = "Custom", "USBCSOH", "USBCNT0-USBCNTL", "USBCNTH", "USBF0", "USBF1", "USBF2"
-group = "Custom", "USBF3", "USBF4", "USBF5"
+group = "Custom", "P1", "P2", "IEN0", "IEN1", "IEN2", "IRCON"
+group = "Custom", "IRCON2", "IP1", "IP0", "ACC", "DPS", "MPAGE"
+group = "Custom", "DMAIRQ", "DMA1CFGL", "DMA1CFGH", "DMA0CFGL", "DMA0CFGH", "DMAARM"
+group = "Custom", "DMAREQ", "P0IFG", "P1IFG", "P2IFG", "PICTL", "P0IEN"
+group = "Custom", "P1IEN", "P2IEN", "P0INP", "PERCFG", "APCFG", "P0SEL"
+group = "Custom", "P1SEL", "P2SEL", "P1INP", "P2INP", "P0DIR", "P1DIR"
+group = "Custom", "P2DIR", "PMUX", "OBSSEL0", "OBSSEL1", "OBSSEL2", "OBSSEL3"
+group = "Custom", "OBSSEL4", "OBSSEL5", "MEMCTR", "FMAP", "ST0", "ST1"
+group = "Custom", "ST2", "STLOAD", "STCC", "STCS", "STCV0", "STCV1"
+group = "Custom", "STCV2", "OPAMPMC", "OPAMPC", "OPAMPS", "CMPCTL", "PCON"
+group = "Custom", "SLEEPCMD", "SLEEPSTA", "CLKCONCMD", "CLKCONSTA", "CLD", "T1CNTH"
+group = "Custom", "T1CNTL", "T1CTL", "T1STAT", "T1CCTL0", "T1CC0H", "T1CC0L"
+group = "Custom", "T1CCTL1", "T1CC1H", "T1CC1L", "T1CCTL2", "T1CC2H", "T1CC2L"
+group = "Custom", "T1CCTL3", "T1CC3H", "T1CC3L", "T1CCTL4", "T1CC4H", "T1CC4L"
+group = "Custom", "IRCTL", "T2MSEL", "T2M0", "T2M1", "T2MOVF0", "T2MOVF1"
+group = "Custom", "T2MOVF2", "T2IRQF", "T2IRQM", "T2CTRL", "T2EVTCFG", "T3CNT"
+group = "Custom", "T3CTL", "T3CCTL0", "T3CC0", "T3CCTL1", "T3CC1", "T4CNT"
+group = "Custom", "T4CTL", "T4CCTL0", "T4CC0", "T4CCTL1", "T4CC1", "TIMIF"
+group = "Custom", "U0CSR", "U0UCR", "U0GCR", "U0DBUF", "U0BAUD", "WDCTL"
+group = "Custom", "FCTL", "RFC_OBS_CTRL1", "RFC_OBS_CTRL2", "DBGDATA", "CHVER", "CHVER.VERSION"
+group = "Custom", "CHIPID", "CHIPINFO0", "CHIPINFO1", "USBADDR", "USBPOW", "USBIIF"
+group = "Custom", "USBOIF", "USBCIF", "USBIIE", "USBOIE", "USBCIE", "USBFRML"
+group = "Custom", "USBFRML.FRAME[7:0]", "USBFRMH", "USBINDEX", "USBCTRL", "USBMAXI", "USBCS0-USBCSIL"
+group = "Custom", "USBCSIH", "USBMAXO", "USBCSOH", "USBCNT0-USBCNTL", "USBCNTH", "USBF0"
+group = "Custom", "USBF1", "USBF2", "USBF3", "USBF4", "USBF5"
