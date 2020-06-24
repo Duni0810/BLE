@@ -920,6 +920,7 @@ static void simpleProfile_HandleConnStatusCB( uint16 connHandle, uint8 changeTyp
            ( !linkDB_Up( connHandle ) ) ) )
     { 
       GATTServApp_InitCharCfg( connHandle, simpleProfileChar4Config );
+      GATTServApp_InitCharCfg( connHandle, simpleProfileChar7Config );
     }
   }
 }

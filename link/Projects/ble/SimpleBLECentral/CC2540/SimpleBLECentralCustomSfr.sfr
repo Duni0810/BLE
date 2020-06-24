@@ -6,6 +6,42 @@ sfr = "T3CNT",	"SFR",	0xca,	1,	base=16,	modified
 sfr = "T3CTL",	"SFR",	0xcb,	1,	base=16,	modified
 sfr = "T3CC0",	"SFR",	0xcd,	1,	base=16,	modified
 sfr = "T4CCTL0",	"SFR",	0xec,	1,	base=16,	modified
+sfr = "IEN2.WDTIE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "IEN2.P1IE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "IEN2.UTX1IE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "IEN2.UTX0IE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "IEN2.RFIE",	"SFR",	0x9a,	1,	base=16,	modified
+sfr = "TCON",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.URX1IF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.ADCIF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.URX0IF",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.IT1",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "TCON.IT0",	"SFR",	0x88,	1,	base=16,	modified
+sfr = "S0CON",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S0CON.ENCIF_1",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S0CON.ENCIF_0",	"SFR",	0x98,	1,	base=16,	modified
+sfr = "S1CON",	"SFR",	0x9b,	1,	base=16,	modified
+sfr = "U0BAUD",	"SFR",	0xc2,	1,	base=16,	modified
+sfr = "U1CSR",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.MODE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.RE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.SLAVE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.FE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.RX_BYTE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1CSR.ACTIVE",	"SFR",	0xf8,	1,	base=16,	modified
+sfr = "U1UCR",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.FLUSH",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.FLOW",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1UCR.D9",	"SFR",	0xfb,	1,	base=16,	modified
+sfr = "U1GCR.CPHA",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1GCR.ORDER",	"SFR",	0xfc,	1,	base=16,	modified
+sfr = "U1DBUF",	"SFR",	0xf9,	1,	base=16,	modified
+sfr = "U1BAUD",	"SFR",	0xfa,	1,	base=16,	modified
+sfr = "U1BAUD.BAUD_M",	"SFR",	0xfa,	1,	base=16,	modified
+sfr = "WDCTL",	"SFR",	0xc9,	1,	base=16,	modified
+sfr = "WDCTL.MODE",	"SFR",	0xc9,	1,	base=16,	modified
+sfr = "WDCTL.INT",	"SFR",	0xc9,	1,	base=16,	modified
+sfr = "USBPOW.RST",	"XData",	0x6201,	1,	base=16,	modified
 
 
 [SfrGroupInfo]

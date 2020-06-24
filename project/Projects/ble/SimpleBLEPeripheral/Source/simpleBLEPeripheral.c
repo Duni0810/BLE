@@ -86,7 +86,7 @@ contact Texas Instruments Incorporated at www.TI.com.
 */
 
 // How often to perform periodic event
-#define SBP_PERIODIC_EVT_PERIOD                   2000
+#define SBP_PERIODIC_EVT_PERIOD                   4000
 
 // What is the advertising interval when device is discoverable (units of 625us, 160=100ms)
 #define DEFAULT_ADVERTISING_INTERVAL          160
@@ -101,10 +101,10 @@ contact Texas Instruments Incorporated at www.TI.com.
 #endif  // defined ( CC2540_MINIDK )
 
 // Minimum connection interval (units of 1.25ms, 80=100ms) if automatic parameter update request is enabled
-#define DEFAULT_DESIRED_MIN_CONN_INTERVAL     8//80
+#define DEFAULT_DESIRED_MIN_CONN_INTERVAL     80//6//80
 
 // Maximum connection interval (units of 1.25ms, 800=1000ms) if automatic parameter update request is enabled
-#define DEFAULT_DESIRED_MAX_CONN_INTERVAL     8//800
+#define DEFAULT_DESIRED_MAX_CONN_INTERVAL     80//800  120=150ms
 
 // Slave latency to use if automatic parameter update request is enabled
 #define DEFAULT_DESIRED_SLAVE_LATENCY         0
@@ -116,7 +116,7 @@ contact Texas Instruments Incorporated at www.TI.com.
 #define DEFAULT_ENABLE_UPDATE_REQUEST         TRUE
 
 // Connection Pause Peripheral time value (in seconds)
-#define DEFAULT_CONN_PAUSE_PERIPHERAL         6
+#define DEFAULT_CONN_PAUSE_PERIPHERAL         3
 
 // Company Identifier: Texas Instruments Inc. (13)
 #define TI_COMPANY_ID                         0x000D
@@ -500,14 +500,14 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
 
   if ( events & SBP_PERIODIC_EVT )
   {
-    // Restart timer
-    if ( SBP_PERIODIC_EVT_PERIOD )
-    {
-      osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
-    }
-
-    // Perform periodic application task
-    performPeriodicTask();
+//    // Restart timer
+//    if ( SBP_PERIODIC_EVT_PERIOD )
+//    {
+//      osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
+//    }
+//
+//    // Perform periodic application task
+//    performPeriodicTask();
 
     return (events ^ SBP_PERIODIC_EVT);
   }
@@ -573,7 +573,7 @@ static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys )
         
         if( gapProfileState == GAPROLE_CONNECTED ) {//ÅÐ¶ÏÊÇ·ñÁ¬½Ó
             uint8 tmpLen;
-            uint8 s_buf[] = " young2zq";
+            uint8 s_buf[] = " young2zq1234512345";
             tmpLen = (uint8)osal_strlen( (char*)s_buf );
             s_buf[0] = tmpLen;
             
@@ -766,21 +766,23 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
 */
 static void performPeriodicTask( void )
 {
-    uint8 valueToCopy;
-    uint8 stat;
-    
-    // Call to retrieve the value of the third characteristic in the profile
-    stat = SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR3, &valueToCopy);
-    
-    if( stat == SUCCESS )
-    {
-        /*
-        * Call to set that value of the fourth characteristic in the profile. Note
-        * that if notifications of the fourth characteristic have been enabled by
-        * a GATT client device, then a notification will be sent every time this
-        * function is called.
-        */
-        SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), &valueToCopy);
+    if (gapProfileState == GAPROLE_CONNECTED) {
+        uint8 valueToCopy;
+        uint8 stat;
+        
+        // Call to retrieve the value of the third characteristic in the profile
+        stat = SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR3, &valueToCopy);
+        
+        if( stat == SUCCESS )
+        {
+            /*
+            * Call to set that value of the fourth characteristic in the profile. Note
+            * that if notifications of the fourth characteristic have been enabled by
+            * a GATT client device, then a notification will be sent every time this
+            * function is called.
+            */
+            SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), &valueToCopy);
+        }
     }
 }
 
@@ -796,16 +798,21 @@ static void performPeriodicTask( void )
 static void simpleProfileChangeCB( uint8 paramID )
 {
     uint8 newValue;
-    uint8 newChar6Value[15] = {0};
-  
+    uint8 newChar6Value[SIMPLEPROFILE_CHAR6_LEN] = {0};
+    uint8 data1 = 0x10;
     switch( paramID )
     {
     case SIMPLEPROFILE_CHAR1:
         SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR1, &newValue );
         
 #if (defined HAL_LCD) && (HAL_LCD == TRUE)
+        
+        SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), &data1);
+        
+        
         HalLcdWriteStringValue( "Char 1:", (uint16)(newValue), 10,  HAL_LCD_LINE_3 );
 #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+        
         
         break;
         
@@ -825,9 +832,9 @@ static void simpleProfileChangeCB( uint8 paramID )
         
         
         
-        if( newChar6Value[0] >= 15 )
+        if( newChar6Value[0] >= SIMPLEPROFILE_CHAR6_LEN )
         {
-            NPI_WriteTransport(&newChar6Value [1],14);
+            NPI_WriteTransport(&newChar6Value [1],SIMPLEPROFILE_CHAR6_LEN - 1);
             NPI_WriteTransport("...\n",4 );
         }
         else
