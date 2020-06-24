@@ -837,7 +837,7 @@ static void simpleBLECentralProcessGATTMsg( gattMsgEvent_t *pMsg )
         {
         
             //NPI_WriteTransport(&pMsg->msg.handleValueNoti.value[1],14 );
-            //NPI_PrintValue("char4: ", pMsg->msg.handleValueNoti.value[0], 10); 
+            NPI_PrintValue("char4: ", pMsg->msg.handleValueNoti.value[0], 10); 
             
             __g_beat_flag = 2;
         }
