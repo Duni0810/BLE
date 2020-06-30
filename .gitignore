@@ -3,5 +3,4 @@
 *.browse
 *.pbd
 *.map
-List
-Obj
+*.d51
