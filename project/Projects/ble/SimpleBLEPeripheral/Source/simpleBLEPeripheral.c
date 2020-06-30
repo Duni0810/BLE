@@ -101,7 +101,7 @@ contact Texas Instruments Incorporated at www.TI.com.
 #endif  // defined ( CC2540_MINIDK )
 
 // Minimum connection interval (units of 1.25ms, 80=100ms) if automatic parameter update request is enabled
-#define DEFAULT_DESIRED_MIN_CONN_INTERVAL     80//6//80
+#define DEFAULT_DESIRED_MIN_CONN_INTERVAL     8//6//80
 
 // Maximum connection interval (units of 1.25ms, 800=1000ms) if automatic parameter update request is enabled
 #define DEFAULT_DESIRED_MAX_CONN_INTERVAL     80//800  120=150ms
