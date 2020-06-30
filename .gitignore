@@ -3,5 +3,6 @@
 *.browse
 *.pbd
 *.map
-List
-Obj
+*.d51
+*.pbi
+*.r51

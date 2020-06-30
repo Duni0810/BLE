@@ -535,7 +535,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
         VOID GAPBondMgr_Register( &simpleBLEPeripheral_BondMgrCBs );
         
         // Set timer for first periodic event
-        osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
+        //osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
         
         return ( events ^ SBP_START_DEVICE_EVT );
     }
