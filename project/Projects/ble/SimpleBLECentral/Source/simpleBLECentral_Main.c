@@ -10,7 +10,7 @@
   Copyright 2011 Texas Instruments Incorporated. All rights reserved.
 
   IMPORTANT: Your use of this Software is limited to those specific rights
-  granted under the terms of a software license agreement between the user
+  granted under the terms of a software license agreement between the user 
   who downloaded the software, his/her employer (which must be your employer)
   and Texas Instruments Incorporated (the "License").  You may not use this
   Software unless you agree to abide by the terms of the License. The License
